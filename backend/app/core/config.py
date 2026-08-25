@@ -7,8 +7,8 @@ class Settings(BaseSettings):
     app_name: str = "AI Business Intelligence Copilot"
     environment: str = "development"
     database_url: str = "sqlite:///./app.db"
-    llm_api_key: str | None = None
-    llm_model: str = "gpt-4.1-mini"
+    llm_api_key: str = ""
+    llm_model: str = "gemini-2.5-flash"
     vector_store_path: str = "./data/vector_store"
     web_search_api_key: str | None = None
     rate_limit_per_minute: int = 60
