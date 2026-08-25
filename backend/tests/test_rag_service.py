@@ -14,5 +14,5 @@ async def test_empty_rag_answer() -> None:
     service = RAGService()
     answer, chunks = await service.answer("What does the policy say?")
 
-    assert "do not have indexed document sources" in answer.lower()
+    assert answer == "No grounded company source matched the question."
     assert chunks == []

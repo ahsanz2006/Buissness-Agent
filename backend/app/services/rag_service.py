@@ -20,7 +20,7 @@ class RAGService:
         chunks = await self.hybrid_search(query_text)
         if not chunks:
             return (
-                "I do not have indexed document sources for that yet. Upload or index the relevant documents and I can ground the answer in them.",
+                "No grounded company source matched the question.",
                 [],
             )
 
