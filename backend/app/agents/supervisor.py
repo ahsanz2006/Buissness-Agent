@@ -23,9 +23,15 @@ class Supervisor:
                     )
                     for chunk in chunks
                 ]
+            elif intent == "tool_action":
+                answer = "Tool actions are not enabled in Phase 1."
+                sources = []
             else:
                 answer = await llm_service.complete(
-                    system_prompt="You are a concise AI business intelligence copilot.",
+                    system_prompt=(
+                        "Answer conversational and business questions clearly. "
+                        "Do not invent company document facts without retrieved sources."
+                    ),
                     user_prompt=request.query_text,
                 )
                 sources = []
@@ -43,19 +49,42 @@ class Supervisor:
             intent=intent,
             sources=sources,
             error=error,
-            suggested_questions=[
-                "Show me sales performance",
-                "What should I review next?",
-                "Summarize the latest document",
-            ],
         )
 
     def _classify_intent(self, query_text: str) -> str:
         normalized = query_text.lower()
+        tool_terms = ("schedule", "meeting", "send an email", "email", "calendar")
         document_terms = ("document", "policy", "contract", "file", "pdf", "leave")
+        analytics_terms = (
+            "sales",
+            "revenue",
+            "profit",
+            "performance",
+            "analyze",
+            "analysis",
+            "compare",
+            "kpi",
+            "forecast",
+            "region",
+            "month",
+        )
+        general_chat_terms = (
+            "hello",
+            "hi",
+            "hey",
+            "what can you help",
+            "who are you",
+            "help me with",
+        )
+        if any(term in normalized for term in tool_terms):
+            return "tool_action"
         if any(term in normalized for term in document_terms):
             return "document_search"
-        return "analytics"
+        if any(term in normalized for term in analytics_terms):
+            return "analytics"
+        if any(term in normalized for term in general_chat_terms):
+            return "general_chat"
+        return "general_chat"
 
 
 supervisor = Supervisor()
