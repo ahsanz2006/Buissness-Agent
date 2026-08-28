@@ -1,23 +1,53 @@
-import { LogOut, MessageCircle, Search, Settings } from "lucide-react";
+import { FileText, LogOut, MessageSquare, Sparkles } from "lucide-react";
+import type { ReactNode, RefObject } from "react";
+import type { AppView } from "../../App";
 
-export function Sidebar() {
+interface SidebarProps {
+  activeView: AppView;
+  hasActiveConversation: boolean;
+  orbTargetRef: RefObject<HTMLDivElement | null>;
+  onNewChat: () => void;
+  onNavigate: (view: AppView) => void;
+}
+
+export function Sidebar({ activeView, hasActiveConversation, orbTargetRef, onNewChat, onNavigate }: SidebarProps) {
   return (
     <aside className="sidebar" aria-label="Primary navigation">
-      <div className="brand">C</div>
-      <nav className="rail-nav">
-        <button className="rail-button active" aria-label="Copilot">
-          <Search size={16} />
-        </button>
-        <button className="rail-button" aria-label="Messages">
-          <MessageCircle size={16} />
-        </button>
-        <button className="rail-button" aria-label="Settings">
-          <Settings size={16} />
-        </button>
+      <div className="sidebar-top">
+        <div ref={orbTargetRef} className="sidebar-orb-slot" aria-hidden="true" />
+      </div>
+      <nav className="rail-nav" aria-label="Copilot navigation">
+        <RailButton active={activeView === "copilot" && !hasActiveConversation} label="New Chat" ariaLabel="Start new chat" onClick={onNewChat}>
+          <Sparkles />
+        </RailButton>
+        <RailButton active={activeView === "history"} label="Chat History" ariaLabel="Open chat history" onClick={() => onNavigate("history")}>
+          <MessageSquare />
+        </RailButton>
+        <RailButton active={activeView === "documents"} label="Documents" ariaLabel="Open documents" onClick={() => onNavigate("documents")}>
+          <FileText />
+        </RailButton>
       </nav>
-      <button className="rail-button rail-exit" aria-label="Sign out">
-        <LogOut size={16} />
-      </button>
+      <div className="sidebar-bottom">
+        <RailButton label="Log out" ariaLabel="Log out" className="rail-exit"><LogOut /></RailButton>
+      </div>
     </aside>
+  );
+}
+
+interface RailButtonProps {
+  active?: boolean;
+  ariaLabel: string;
+  children: ReactNode;
+  className?: string;
+  label: string;
+  onClick?: () => void;
+}
+
+function RailButton({ active, ariaLabel, children, className = "", label, onClick }: RailButtonProps) {
+  return (
+    <button type="button" className={`rail-button ${active ? "active" : ""} ${className}`.trim()} aria-label={ariaLabel} aria-current={active ? "page" : undefined} onClick={onClick}>
+      {children}
+      <span className="rail-tooltip" role="tooltip">{label}</span>
+    </button>
   );
 }
