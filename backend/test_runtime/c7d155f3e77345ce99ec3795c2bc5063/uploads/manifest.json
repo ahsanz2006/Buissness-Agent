@@ -1,0 +1,15 @@
+[
+  {
+    "document_id": "doc_7472892d05d84113ab95042438c96030",
+    "filename": "page.html",
+    "file_type": "html",
+    "file_size": 97,
+    "status": "indexed",
+    "chunk_count": 1,
+    "error": null,
+    "created_at": "2026-08-27T12:01:35.342734+00:00",
+    "metadata": {
+      "stored_filename": "doc_7472892d05d84113ab95042438c96030_page.html"
+    }
+  }
+]

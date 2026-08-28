@@ -1,10 +1,12 @@
-import { Brain, Mic, Paperclip, SendHorizontal, Sparkles } from "lucide-react";
-import { FormEvent, useRef, useState } from "react";
+import { ArrowUp } from "lucide-react";
+import { FormEvent, KeyboardEvent, useRef, useState } from "react";
 
 interface ComposerProps {
   busy: boolean;
-  onSend: (queryText: string, voiceMode: boolean) => void;
+  onSend: (queryText: string) => void;
 }
+
+const MAX_TEXTAREA_HEIGHT = 170;
 
 export function Composer({ busy, onSend }: ComposerProps) {
   const [text, setText] = useState("");
@@ -14,37 +16,52 @@ export function Composer({ busy, onSend }: ComposerProps) {
     event.preventDefault();
     const queryText = text.trim();
     if (!queryText || busy) return;
-    onSend(queryText, false);
+    onSend(queryText);
     setText("");
-    inputRef.current?.focus();
+    requestAnimationFrame(() => {
+      if (!inputRef.current) return;
+      resizeTextarea(inputRef.current);
+      inputRef.current.focus();
+    });
+  }
+
+  function onKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    const nativeEvent = event.nativeEvent as KeyboardEvent<HTMLTextAreaElement>["nativeEvent"] & {
+      isComposing?: boolean;
+    };
+    if (nativeEvent.isComposing || nativeEvent.keyCode === 229) return;
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      event.currentTarget.form?.requestSubmit();
+    }
+  }
+
+  function onTextChange(value: string, textarea: HTMLTextAreaElement) {
+    setText(value);
+    resizeTextarea(textarea);
   }
 
   return (
     <form className="composer" onSubmit={submit}>
       <textarea
         ref={inputRef}
-        aria-label="Ask anything"
-        placeholder="Ask me anything..."
+        aria-label="Ask anything about your business"
+        placeholder="Ask about your business..."
         value={text}
-        rows={2}
-        disabled={busy}
-        onChange={(event) => setText(event.target.value)}
+        rows={1}
+        onChange={(event) => onTextChange(event.target.value, event.currentTarget)}
+        onKeyDown={onKeyDown}
       />
-      <div className="composer-actions">
-        <button type="button" disabled aria-label="Attach file">
-          <Paperclip size={14} /> Attach
-        </button>
-        <button type="button" disabled aria-label="Deep think">
-          <Brain size={14} /> Deep Think
-        </button>
-        <span className="composer-spacer" />
-        <button type="button" disabled aria-label="Voice mode">
-          <Sparkles size={14} /> Voice
-        </button>
-        <button type="submit" className="send-button" disabled={busy || !text.trim()}>
-          {busy ? <Mic size={14} /> : <SendHorizontal size={14} />} Send
-        </button>
-      </div>
+      <button type="submit" className="send-button" disabled={busy || !text.trim()} aria-label="Send message" title="Send">
+        <ArrowUp size={20} />
+      </button>
     </form>
   );
+}
+
+function resizeTextarea(textarea: HTMLTextAreaElement) {
+  textarea.style.height = "auto";
+  const nextHeight = Math.min(textarea.scrollHeight, MAX_TEXTAREA_HEIGHT);
+  textarea.style.height = `${nextHeight}px`;
+  textarea.style.overflowY = textarea.scrollHeight > MAX_TEXTAREA_HEIGHT ? "auto" : "hidden";
 }

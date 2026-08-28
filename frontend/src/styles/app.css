@@ -5,13 +5,15 @@
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
   font-family: Inter, "SF Pro Display", "Segoe UI", Arial, sans-serif;
   color: #18171c;
   background:
-    radial-gradient(circle at 12% 22%, rgba(255, 225, 199, 0.62), transparent 32%),
-    radial-gradient(circle at 82% 12%, rgba(212, 232, 255, 0.88), transparent 36%),
-    linear-gradient(135deg, #fbf6f7 0%, #f6fbff 52%, #fff7fb 100%);
+    radial-gradient(circle at 10% 20%, rgba(255, 224, 213, 0.58), transparent 36%),
+    radial-gradient(circle at 90% 15%, rgba(210, 229, 255, 0.72), transparent 38%),
+    radial-gradient(circle at 52% 88%, rgba(236, 214, 255, 0.34), transparent 38%),
+    linear-gradient(135deg, #fffaf8 0%, #f8fbff 52%, #fdf9ff 100%);
 }
 
 button,
@@ -21,36 +23,40 @@ textarea {
 
 button {
   border: 0;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }
 
 .app-shell {
-  width: calc(100vw - 88px);
-  height: calc(100vh - 88px);
-  margin: 44px;
+  width: 100vw;
+  height: 100dvh;
+  margin: 0;
   position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.84);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.47);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.38),
-    0 26px 80px rgba(84, 94, 108, 0.18);
-  backdrop-filter: blur(22px);
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .sidebar {
   position: absolute;
-  left: 22px;
-  top: 20px;
-  bottom: 22px;
+  left: 24px;
+  top: 24px;
+  bottom: 24px;
   width: 64px;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 18px 0;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.78);
-  box-shadow: 14px 0 60px rgba(255, 226, 186, 0.18);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 14px 0 60px rgba(137, 154, 191, 0.14);
+  backdrop-filter: blur(18px);
 }
 
 .brand {
@@ -82,7 +88,7 @@ button {
 }
 
 .rail-button.active {
-  background: linear-gradient(135deg, #f6e5d4, #e4eef6);
+  background: linear-gradient(135deg, rgba(252, 220, 242, 0.86), rgba(221, 242, 252, 0.86));
 }
 
 .rail-exit {
@@ -90,117 +96,142 @@ button {
 }
 
 .copilot-page {
-  min-height: 100%;
+  min-height: 100dvh;
   padding: 34px 46px 40px 118px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: visible;
 }
 
-.topbar {
-  width: 100%;
+.landing-hero {
+  flex: 1;
+  min-height: 0;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 2.8vh, 32px);
+  padding-bottom: 112px;
+  overflow: visible;
 }
 
-.wallet-button {
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 18px;
-  border-radius: 999px;
-  color: #18171c;
-  background: rgba(255, 255, 255, 0.64);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.wallet-button svg {
-  width: 26px;
-  height: 26px;
-  padding: 6px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #efe4ca, #e2edf8);
-}
-
-h1 {
-  margin: 58px 0 20px;
+.hero-heading {
+  margin: 0;
   text-align: center;
-  font-size: clamp(30px, 3.2vw, 46px);
-  line-height: 1.16;
+  font-size: clamp(42px, 3.5vw, 52px);
+  line-height: 1.09;
   letter-spacing: 0;
+  font-weight: 560;
+}
+
+.hero-heading span,
+.hero-heading strong {
+  display: block;
+}
+
+.hero-heading span {
+  color: rgba(37, 38, 48, 0.72);
   font-weight: 520;
 }
 
-h1 span {
-  color: rgba(33, 30, 38, 0.12);
+.hero-heading strong {
+  color: #171821;
+  font-weight: 590;
 }
 
 .orb-hero {
   position: relative;
-  width: min(405px, 40vw);
-  height: min(410px, 44vh);
+  width: clamp(420px, 40vw, 600px);
+  height: clamp(340px, 32vw, 480px);
   display: grid;
   place-items: center;
-  margin-top: 16px;
+  overflow: visible;
+  background: transparent;
+  isolation: isolate;
+}
+
+.orb-hero::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  z-index: -1;
+  width: 68%;
+  height: 56%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(190, 77, 255, 0.13), rgba(72, 218, 255, 0.08) 42%, transparent 74%);
+  filter: blur(30px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .spline-orb {
-  width: 100%;
-  height: 100%;
-  transform: scale(0.7);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 172%;
+  height: 172%;
+  transform: translate(-50%, -50%) scale(0.78);
+  transform-origin: center center;
+  background: transparent !important;
+  filter: saturate(1.08) contrast(1.05) brightness(0.9);
+  pointer-events: none;
 }
 
-.orb-fallback {
+.scene-fallback {
   position: absolute;
   width: 260px;
   aspect-ratio: 1;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 24% 21%, #fff 0 8%, transparent 9%),
-    radial-gradient(circle at 75% 72%, #fff 0 10%, transparent 11%),
-    linear-gradient(180deg, #f59bd7 10%, #ed9dd0 42%, #3ed2df 76%);
-  box-shadow: inset 18px 0 18px rgba(88, 16, 72, 0.42), inset -14px 8px 18px rgba(27, 54, 110, 0.34), 0 24px 34px rgba(119, 154, 185, 0.22);
-}
-
-.orb-reflection {
-  position: absolute;
-  bottom: 24px;
-  width: 260px;
-  height: 72px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(225, 139, 168, 0.22), transparent 68%);
-  filter: blur(1px);
+    radial-gradient(circle at 25% 21%, rgba(255, 255, 255, 0.92) 0 8%, transparent 9%),
+    radial-gradient(circle at 75% 72%, rgba(255, 255, 255, 0.86) 0 10%, transparent 11%),
+    linear-gradient(180deg, #ff43d3 10%, #8e4dff 44%, #26d8f4 78%);
+  box-shadow:
+    inset 18px 0 18px rgba(83, 16, 112, 0.44),
+    inset -14px 8px 18px rgba(14, 91, 133, 0.36),
+    0 24px 44px rgba(116, 124, 197, 0.2);
 }
 
 .command-dock {
-  width: min(600px, 100%);
-  margin-top: auto;
-  transform: translateY(-16px);
+  width: min(680px, 100%);
+  margin: 0 auto;
+  position: relative;
+  isolation: isolate;
+}
+
+.command-dock::before {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -18px;
+  z-index: -1;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(157, 78, 255, 0.42) 0%,
+    rgba(181, 92, 255, 0.28) 34%,
+    rgba(127, 76, 255, 0.14) 58%,
+    transparent 78%
+  );
+  filter: blur(16px);
+  transform-origin: center;
+  animation: composerGlow 5.4s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .copilot-page:not(.chat-mode) .command-dock {
   position: absolute;
   left: calc(50% + 38px);
-  bottom: 28px;
-  width: min(600px, calc(100% - 250px));
+  bottom: clamp(54px, 8vh, 82px);
+  width: min(680px, calc(100% - 250px));
   margin-top: 0;
   transform: translateX(-50%);
 }
 
-.quick-actions {
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-
-.quick-actions button,
-.composer-actions button,
 .suggested button {
   min-height: 32px;
   display: inline-flex;
@@ -218,50 +249,80 @@ h1 span {
 
 .composer {
   width: 100%;
-  min-height: 116px;
-  padding: 15px 16px 14px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.78);
+  min-height: 62px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 11px 12px 11px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  border-radius: 21px;
+  background: rgba(255, 255, 255, 0.72);
   box-shadow:
-    12px 10px 0 rgba(162, 214, 247, 0.28),
-    -10px -8px 0 rgba(245, 231, 159, 0.26),
-    0 20px 50px rgba(88, 81, 96, 0.12);
+    0 12px 34px rgba(113, 84, 145, 0.08),
+    inset 0 -1px 0 rgba(156, 88, 255, 0.1);
+  backdrop-filter: blur(24px) saturate(120%);
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.composer:focus-within {
+  border-color: rgba(238, 86, 181, 0.42);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow:
+    0 16px 50px rgba(113, 84, 145, 0.14),
+    0 5px 20px rgba(75, 172, 210, 0.08),
+    0 0 0 4px rgba(237, 83, 184, 0.08);
 }
 
 .composer textarea {
   width: 100%;
-  height: 45px;
+  min-height: 38px;
+  max-height: 170px;
   resize: none;
   border: 0;
   outline: 0;
   background: transparent;
-  color: #37363c;
-  font-size: 14px;
+  color: #272831;
+  font-size: 15px;
   font-weight: 400;
+  line-height: 1.45;
+  overflow-y: hidden;
+  padding: 8px 4px 8px 0;
+  scrollbar-width: thin;
 }
 
 .composer textarea::placeholder {
-  color: #8e9297;
-}
-
-.composer-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.composer-spacer {
-  flex: 1;
-}
-
-.composer-actions button:disabled {
-  opacity: 0.95;
+  color: #8a919e;
 }
 
 .send-button {
-  color: white !important;
-  border-color: transparent !important;
-  background: linear-gradient(135deg, #ee74cc, #d94fc1) !important;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: white;
+  background: linear-gradient(135deg, #292935 0%, #b43bea 52%, #20d1e5 100%);
+  box-shadow: 0 10px 24px rgba(181, 70, 208, 0.2);
+  transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+
+.send-button:hover:not(:disabled) {
+  transform: scale(1.04);
+  filter: saturate(1.15);
+  box-shadow:
+    0 12px 28px rgba(181, 70, 208, 0.26),
+    0 0 22px rgba(39, 207, 229, 0.14);
+}
+
+.send-button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.send-button:disabled {
+  opacity: 0.42;
+  box-shadow: none;
 }
 
 .chat-mode {
@@ -323,16 +384,33 @@ h1 span {
   font-size: 13px;
 }
 
+@keyframes composerGlow {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scaleX(0.94);
+    filter: blur(15px);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scaleX(1.04);
+    filter: blur(19px);
+  }
+}
+
 @media (max-width: 760px) {
   .app-shell {
-    width: calc(100vw - 20px);
-    height: calc(100vh - 20px);
-    margin: 10px;
-    border-radius: 14px;
+    width: 100vw;
+    height: 100dvh;
+    margin: 0;
+    border-radius: 0;
   }
 
   .sidebar {
-    left: 12px;
+    left: 10px;
+    top: 10px;
+    bottom: 10px;
     width: 46px;
   }
 
@@ -340,22 +418,26 @@ h1 span {
     padding: 24px 18px 26px 72px;
   }
 
-  h1 {
-    margin-top: 46px;
-    font-size: 28px;
+  .landing-hero {
+    gap: 16px;
+    justify-content: center;
+    padding-bottom: 102px;
+  }
+
+  .hero-heading {
+    font-size: clamp(32px, 9vw, 42px);
   }
 
   .orb-hero {
-    width: 500px;
-    height: 500px;
-    margin-top: -8px;
-    margin-bottom: -220px;
-    transform: scale(0.55);
-    transform-origin: center top;
+    width: clamp(300px, calc(100vw - 62px), 360px);
+    height: clamp(300px, 48vh, 380px);
+    margin-left: -10px;
   }
 
   .spline-orb {
-    transform: none;
+    width: 185%;
+    height: 185%;
+    transform: translate(-50%, -50%) scale(0.64);
   }
 
   .command-dock {
@@ -364,21 +446,18 @@ h1 span {
 
   .copilot-page:not(.chat-mode) .command-dock {
     left: calc(50% + 27px);
-    bottom: 16px;
+    bottom: 28px;
     width: calc(100% - 104px);
   }
 
   .composer {
-    min-height: 92px;
-    padding: 12px;
+    min-height: 60px;
+    padding: 10px 10px 10px 16px;
+    border-radius: 20px;
   }
 
   .composer textarea {
-    height: 38px;
-  }
-
-  .quick-actions {
-    margin-bottom: 8px;
+    min-height: 38px;
   }
 
   .user-message,

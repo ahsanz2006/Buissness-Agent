@@ -1,0 +1,12 @@
+[
+  {
+    "document_id": "doc_b8d2ad720f5d4bdb9e290e9af537c71c",
+    "filename": "handbook.docx",
+    "file_type": "docx",
+    "file_size": 36794,
+    "status": "indexed",
+    "chunk_count": 3,
+    "error": null,
+    "created_at": "2026-08-26T06:23:16.503098+00:00"
+  }
+]

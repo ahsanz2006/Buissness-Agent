@@ -1,0 +1,6 @@
+department,metric,april,may,june,target,owner
+Sales,Revenue_USD,420000,455000,510000,500000,Ava Chen
+Sales,Conversion_Rate_Pct,18.2,19.4,21.1,20.0,Ava Chen
+Support,First_Response_Minutes,14,12,9,10,Noah Malik
+Support,CSAT_Pct,88,91,94,92,Noah Malik
+Operations,Order_Fulfillment_Hours,31,28,24,26,Mia Shah

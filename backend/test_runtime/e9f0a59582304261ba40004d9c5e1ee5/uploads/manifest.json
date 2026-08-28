@@ -1,0 +1,16 @@
+[
+  {
+    "document_id": "doc_09bf41fca1f843f1b0d3de90de3d6168",
+    "filename": "policy.pdf",
+    "file_type": "pdf",
+    "file_size": 599,
+    "status": "indexed",
+    "chunk_count": 1,
+    "error": null,
+    "created_at": "2026-08-27T12:01:35.715716+00:00",
+    "metadata": {
+      "stored_filename": "doc_09bf41fca1f843f1b0d3de90de3d6168_policy.pdf",
+      "page_count": 1
+    }
+  }
+]

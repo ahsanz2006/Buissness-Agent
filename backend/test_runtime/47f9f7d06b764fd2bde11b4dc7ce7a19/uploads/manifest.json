@@ -1,0 +1,16 @@
+[
+  {
+    "document_id": "doc_6c790237b4c04c1bb0eaf56b41bbea3a",
+    "filename": "policy.csv",
+    "file_type": "csv",
+    "file_size": 58,
+    "status": "indexed",
+    "chunk_count": 1,
+    "error": null,
+    "created_at": "2026-08-27T11:57:00.037792+00:00",
+    "metadata": {
+      "stored_filename": "doc_6c790237b4c04c1bb0eaf56b41bbea3a_policy.csv",
+      "row_count": 2
+    }
+  }
+]

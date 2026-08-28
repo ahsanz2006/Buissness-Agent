@@ -1,0 +1,19 @@
+[
+  {
+    "document_id": "doc_8b683d36f1c042c9be8d25171fd17b6b",
+    "filename": "pipeline.xlsx",
+    "file_type": "xlsx",
+    "file_size": 4869,
+    "status": "indexed",
+    "chunk_count": 1,
+    "error": null,
+    "created_at": "2026-08-27T12:04:14.056392+00:00",
+    "metadata": {
+      "stored_filename": "doc_8b683d36f1c042c9be8d25171fd17b6b_pipeline.xlsx",
+      "row_count": 2,
+      "sections": [
+        "Pipeline"
+      ]
+    }
+  }
+]

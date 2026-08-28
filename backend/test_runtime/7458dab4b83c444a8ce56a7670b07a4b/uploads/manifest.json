@@ -1,0 +1,19 @@
+[
+  {
+    "document_id": "doc_4237cc98287f435db36ef3607c04c7cc",
+    "filename": "handbook.docx",
+    "file_type": "docx",
+    "file_size": 36794,
+    "status": "indexed",
+    "chunk_count": 3,
+    "error": null,
+    "created_at": "2026-08-27T12:01:35.620841+00:00",
+    "metadata": {
+      "stored_filename": "doc_4237cc98287f435db36ef3607c04c7cc_handbook.docx",
+      "sections": [
+        "Leave Policy",
+        "Table 1"
+      ]
+    }
+  }
+]

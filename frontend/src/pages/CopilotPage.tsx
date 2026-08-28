@@ -1,4 +1,3 @@
-import { Bot, CircleEllipsis, Plus, Search, TrendingUp, WalletCards } from "lucide-react";
 import { useState } from "react";
 import { Composer } from "../components/copilot/Composer";
 import { MessageCard } from "../components/copilot/MessageCard";
@@ -12,20 +11,13 @@ interface LocalMessage {
   response?: ChatResponse;
 }
 
-const quickActions = [
-  { label: "Market Update", icon: TrendingUp },
-  { label: "Top Gainers", icon: Bot },
-  { label: "My Portfolio", icon: WalletCards },
-  { label: "Trending Tokens", icon: Search },
-];
-
 export function CopilotPage() {
   const [messages, setMessages] = useState<LocalMessage[]>([]);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
 
-  async function onSend(queryText: string, voiceMode: boolean) {
+  async function onSend(queryText: string) {
     setBusy(true);
     setStatus(null);
     setMessages((items) => [...items, { role: "user", text: queryText }]);
@@ -35,7 +27,7 @@ export function CopilotPage() {
         conversation_id: conversationId,
         query_text: queryText,
         attachment_ids: [],
-        voice_mode: voiceMode,
+        voice_mode: false,
       });
       setConversationId(response.conversation_id);
       setMessages((items) => [...items, { role: "assistant", response }]);
@@ -51,22 +43,14 @@ export function CopilotPage() {
 
   return (
     <main className={`copilot-page ${hasChat ? "chat-mode" : ""}`}>
-      <header className="topbar">
-        <span />
-        <button className="wallet-button" type="button">
-          <Plus size={14} /> Connect Wallet
-        </button>
-      </header>
-
       {!hasChat && (
-        <>
-          <h1>
-            <span>AI Powers</span> Easy Wallet <span>And</span>
-            <br />
-            Voice Access
+        <section className="landing-hero" aria-label="AI Business Intelligence Copilot">
+          <h1 className="hero-heading">
+            <span>Insight in Sight.</span>
+            <strong>Decisions Done Right.</strong>
           </h1>
           <OrbHero />
-        </>
+        </section>
       )}
 
       {hasChat && (
@@ -83,17 +67,7 @@ export function CopilotPage() {
         </section>
       )}
 
-      <section className="command-dock">
-        <div className="quick-actions">
-          {quickActions.map(({ label, icon: Icon }) => (
-            <button type="button" key={label}>
-              <Icon size={14} /> {label}
-            </button>
-          ))}
-          <button type="button" aria-label="More options">
-            <CircleEllipsis size={16} />
-          </button>
-        </div>
+      <section className="command-dock" aria-label="Business copilot prompt">
         <Composer busy={busy} onSend={onSend} />
         {status && <p className="status">{status}</p>}
       </section>
