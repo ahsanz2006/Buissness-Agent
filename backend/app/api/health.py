@@ -1,8 +1,4 @@
 from fastapi import APIRouter
-
-router = APIRouter(tags=["health"])
-
-
+router=APIRouter(tags=["health"])
 @router.get("/health")
-async def health() -> dict[str, str]:
-    return {"status": "ok"}
+def health(): return {"status":"ok","service":"ai-business-intelligence-copilot"}

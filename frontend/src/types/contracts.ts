@@ -24,7 +24,8 @@ export interface SourceRef {
 export interface ToolCall {
   tool_name: string;
   arguments: Record<string, unknown>;
-  status: "proposed" | "approved" | "executed" | "failed";
+  status: "proposed" | "approved" | "executed" | "failed" | "cancelled";
+  error?: string | null;
 }
 
 export interface ChatRequest {

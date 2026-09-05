@@ -1,25 +1,18 @@
-__pycache__/
-.pytest_cache/
-pytest-cache-files-*/
+# Agent and local automation metadata
+.agents/
+.codex/
+.tmp/
+skills-lock.json
 
-# Secrets and local environment
+# Environment files and secrets
 .env
 .env.*
 !.env.example
 !.env.*.example
-backend/.env
-backend/.env.*
-frontend/.env
-frontend/.env.*
 **/.env
 **/.env.*
-**/*secret*
-**/*secrets*
-**/*credential*
-**/*credentials*
-**/*token*
-**/*apikey*
-**/*api_key*
+!**/.env.example
+!**/.env.*.example
 *.pem
 *.key
 *.p8
@@ -33,18 +26,50 @@ service-account*.json
 firebase*.json
 google-credentials*.json
 
-# Local runtime data
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+pytest-cache-files-*/
+
+# Backend runtime data
+*.db
 *.sqlite
 *.sqlite3
-*.db
 *.log
-
+backend/data/uploads/
+backend/data/vector_store/
+backend/test_runtime/
 backend/*-dev.log
 backend/*-dev.err.log
-backend/*.env
-frontend/node_modules/
-frontend/dist/
+
+# Node and frontend builds
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+frontend/test-results/
+frontend/playwright-report/
+frontend/blob-report/
 frontend/*-dev.log
 frontend/*-dev.err.log
 frontend/ui-*.png
 
+# Editors and operating systems
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+Desktop.ini

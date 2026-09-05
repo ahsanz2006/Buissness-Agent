@@ -1,20 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { OrbHero } from "./components/copilot/OrbHero";
 import { Sidebar } from "./components/layout/Sidebar";
-import { sendChat } from "./lib/api";
+import { listConversations, loadConversation, sendChat, type SavedConversation } from "./lib/api";
 import { CopilotPage, type LocalMessage } from "./pages/CopilotPage";
+import { DocumentsPage } from "./pages/DocumentsPage";
+import { CalendarPage } from "./pages/CalendarPage";
+import { ConnectionsPage } from "./pages/ConnectionsPage";
 
-export type AppView = "copilot" | "history" | "documents";
-
-interface ConversationSummary {
-  id: string;
-  title: string;
-  updatedAt: Date;
-}
+export type AppView = "copilot" | "history" | "documents" | "calendar" | "connections";
 
 function viewFromPath(): AppView {
   if (window.location.pathname === "/history") return "history";
   if (window.location.pathname === "/documents") return "documents";
+  if (window.location.pathname === "/calendar") return "calendar";
+  if (window.location.pathname === "/connections") return "connections";
   return "copilot";
 }
 
@@ -22,10 +21,13 @@ export function App() {
   const [view, setView] = useState<AppView>(viewFromPath);
   const [messages, setMessages] = useState<LocalMessage[]>([]);
   const [conversationId, setConversationId] = useState<string | null>(null);
-  const [history, setHistory] = useState<ConversationSummary[]>([]);
+  const [history, setHistory] = useState<SavedConversation[]>([]);
+  const [historyBusy, setHistoryBusy] = useState(false);
+  const [historyError, setHistoryError] = useState("");
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [composerKey, setComposerKey] = useState(0);
+  const [voiceActivity,setVoiceActivity]=useState<"idle"|"listening"|"processing"|"speaking"|"error">("idle");
   const requestEpoch = useRef(0);
   const heroOrbTargetRef = useRef<HTMLDivElement | null>(null);
   const sidebarOrbTargetRef = useRef<HTMLDivElement | null>(null);
@@ -36,13 +38,24 @@ export function App() {
   const conversationHistory = useMemo(() => {
     if (!hasActiveConversation) return history;
     const firstQuestion = messages.find((message) => message.role === "user")?.text;
-    const current: ConversationSummary = {
+    const current: SavedConversation = {
       id: conversationId ?? "current-conversation",
       title: firstQuestion ?? "Current conversation",
-      updatedAt: new Date(),
+      updated_at: new Date().toISOString(),
+      message_count: messages.length,
     };
     return [current, ...history.filter((item) => item.id !== current.id)];
   }, [conversationId, hasActiveConversation, history, messages]);
+
+  useEffect(() => {
+    if (view !== "history") return;
+    let active = true;
+    setHistoryBusy(true); setHistoryError("");
+    listConversations().then((items) => { if (active) setHistory(items); })
+      .catch((error) => { if (active) setHistoryError(error instanceof Error ? error.message : "Chat history could not be loaded."); })
+      .finally(() => { if (active) setHistoryBusy(false); });
+    return () => { active = false; };
+  }, [view]);
 
   useEffect(() => {
     const onPopState = () => setView(viewFromPath());
@@ -66,7 +79,8 @@ export function App() {
         {
           id: conversationId ?? `local-${Date.now()}`,
           title: firstQuestion,
-          updatedAt: new Date(),
+          updated_at: new Date().toISOString(),
+          message_count: messages.length,
         },
         ...items.filter((item) => item.id !== conversationId),
       ]);
@@ -79,7 +93,7 @@ export function App() {
     navigate("copilot");
   }
 
-  async function onSend(queryText: string) {
+  async function onSend(queryText: string, voiceMode = false) {
     const epoch = requestEpoch.current;
     setBusy(true);
     setStatus(null);
@@ -90,7 +104,7 @@ export function App() {
         conversation_id: conversationId,
         query_text: queryText,
         attachment_ids: [],
-        voice_mode: false,
+        voice_mode: voiceMode,
       });
       if (requestEpoch.current !== epoch) return;
       setConversationId(response.conversation_id);
@@ -105,6 +119,26 @@ export function App() {
     }
   }
 
+  async function openConversation(id: string) {
+    setHistoryBusy(true); setHistoryError("");
+    try {
+      const saved = await loadConversation(id);
+      setConversationId(saved.id);
+      setMessages(saved.messages.map((item) => item.role === "user"
+        ? { role: "user", text: item.content }
+        : { role: "assistant", response: {
+            request_id: `history-${item.id}`, conversation_id: saved.id, message_id: item.id,
+            answer: item.content, intent: "general_chat", kpis: [],
+            chart_spec: { type: "none", title: "", x_key: null, y_keys: [], rows: [] },
+            insights: [], recommendations: [], forecast: null, sources: [], tool_calls: [],
+            requires_approval: false, suggested_questions: [], error: null,
+          } }));
+      navigate("copilot");
+    } catch (error) {
+      setHistoryError(error instanceof Error ? error.message : "Chat history could not be loaded.");
+    } finally { setHistoryBusy(false); }
+  }
+
   return (
     <div className="app-shell">
       <Sidebar
@@ -114,18 +148,27 @@ export function App() {
         onNewChat={startNewChat}
         onNavigate={navigate}
       />
-      <OrbHero busy={busy} destinationRef={orbIsParked ? sidebarOrbTargetRef : heroOrbTargetRef} parked={orbIsParked} />
+      <OrbHero busy={busy || voiceActivity !== "idle"} destinationRef={orbIsParked ? sidebarOrbTargetRef : heroOrbTargetRef} parked={orbIsParked} />
+      {view === "documents" && <DocumentsPage />}
+      {view === "calendar" && <CalendarPage onNavigate={navigate} />}
+      {view === "connections" && <ConnectionsPage />}
+      <div style={{ display: view === "documents" || view === "calendar" || view === "connections" ? "none" : "contents" }}>
       <CopilotPage
         busy={busy}
         composerKey={composerKey}
         conversationHistory={conversationHistory}
+        historyBusy={historyBusy}
+        historyError={historyError}
         hasActiveConversation={hasActiveConversation}
         heroOrbTargetRef={heroOrbTargetRef}
         messages={messages}
         onSend={onSend}
+        onOpenConversation={openConversation}
+        onVoiceActivity={setVoiceActivity}
         status={status}
         view={view}
       />
+      </div>
     </div>
   );
 }

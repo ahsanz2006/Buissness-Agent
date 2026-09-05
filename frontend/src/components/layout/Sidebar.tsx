@@ -1,4 +1,4 @@
-import { FileText, LogOut, MessageSquare, Sparkles } from "lucide-react";
+import { CalendarDays, FileText, Link2, MessageSquare, Sparkles } from "lucide-react";
 import type { ReactNode, RefObject } from "react";
 import type { AppView } from "../../App";
 
@@ -26,10 +26,9 @@ export function Sidebar({ activeView, hasActiveConversation, orbTargetRef, onNew
         <RailButton active={activeView === "documents"} label="Documents" ariaLabel="Open documents" onClick={() => onNavigate("documents")}>
           <FileText />
         </RailButton>
+        <RailButton active={activeView === "calendar"} label="Calendar" ariaLabel="Open calendar" onClick={() => onNavigate("calendar")}><CalendarDays /></RailButton>
+        <RailButton active={activeView === "connections"} label="Connections" ariaLabel="Open connections" onClick={() => onNavigate("connections")}><Link2 /></RailButton>
       </nav>
-      <div className="sidebar-bottom">
-        <RailButton label="Log out" ariaLabel="Log out" className="rail-exit"><LogOut /></RailButton>
-      </div>
     </aside>
   );
 }
@@ -38,14 +37,13 @@ interface RailButtonProps {
   active?: boolean;
   ariaLabel: string;
   children: ReactNode;
-  className?: string;
   label: string;
   onClick?: () => void;
 }
 
-function RailButton({ active, ariaLabel, children, className = "", label, onClick }: RailButtonProps) {
+function RailButton({ active, ariaLabel, children, label, onClick }: RailButtonProps) {
   return (
-    <button type="button" className={`rail-button ${active ? "active" : ""} ${className}`.trim()} aria-label={ariaLabel} aria-current={active ? "page" : undefined} onClick={onClick}>
+    <button type="button" className={`rail-button ${active ? "active" : ""}`.trim()} aria-label={ariaLabel} aria-current={active ? "page" : undefined} onClick={onClick}>
       {children}
       <span className="rail-tooltip" role="tooltip">{label}</span>
     </button>
